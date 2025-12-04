@@ -6,6 +6,7 @@ import { ProjectsSection } from "@/components/dashboard/Projects";
 import { Socials } from "@/components/dashboard/Socials";
 import { motion, Variants } from "framer-motion"; // Import Variants để fix lỗi đỏ
 import { cn } from "@/lib/utils";
+import { MusicPlayer } from "@/components/dashboard/MusicPlayer";
 
 // --- CẤU HÌNH ANIMATION ---
 const containerVariants: Variants = {
@@ -65,6 +66,10 @@ export default function Home() {
 
           <BentoCard className="md:col-span-1 bg-linear-to-br from-pink-500/10 to-rose-500/10 border-pink-500/20">
             <Socials />
+          </BentoCard>
+          
+          <BentoCard className="h-48 p-0 border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50">
+            <MusicPlayer />
           </BentoCard>
         </section>
 

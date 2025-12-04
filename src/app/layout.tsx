@@ -5,6 +5,7 @@ import { FloatingDock } from "@/components/layout/FloatingDock"; // Đảm bảo
 import { ThemeProvider } from "@/features/theme/theme-provider";
 import { ModeToggle } from "@/components/ui/ModeToggle";
 import { CommandMenu } from "@/components/layout/CommandMenu";
+import { TopBar } from "@/components/layout/TopBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,6 +36,7 @@ export default function RootLayout({
         >
           <main className="...">
             {children}
+            <TopBar />
             <CommandMenu />
             <ModeToggle />
             <FloatingDock />
