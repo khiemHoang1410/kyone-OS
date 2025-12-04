@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google"; // Hoặc font ngài thích
+import { Inter } from "next/font/google"; 
 import "./globals.css";
-import { FloatingDock } from "@/components/layout/FloatingDock";
+import { FloatingDock } from "@/components/layout/FloatingDock"; // Đảm bảo đường dẫn đúng
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,14 +16,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.className} bg-zinc-950 text-zinc-100 antialiased`}>
-        {/* Bỏ Sidebar, chỉ còn children */}
-        <main className="min-h-screen p-4 md:p-8 max-w-7xl mx-auto relative">
+    <html lang="en" className="scroll-smooth dark">
+      {/* 1. antialiased: Chữ mượt.
+         2. overflow-x-hidden: CẤM nội dung lòi sang 2 bên (Fix lỗi scroll ngang).
+         3. selection:bg-cyan-500/30: Bôi đen văn bản có màu đẹp (bonus).
+      */}
+      <body className={`${inter.className} antialiased overflow-x-hidden selection:bg-cyan-500/30`}>
+        
+        {/* Main để w-full để thằng con page.tsx được bung lụa thoải mái */}
+        <main className="min-h-screen w-full relative">
           {children}
-          {/* Tí nữa mình nhét cái Dock vào đây sau */}
           <FloatingDock />
         </main>
+        
       </body>
     </html>
   );

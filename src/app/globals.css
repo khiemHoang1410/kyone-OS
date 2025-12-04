@@ -146,15 +146,24 @@
 }
 
 
-/* BACKGROUND PATTERN UTILITIES */
-.bg-grid-black\/\[0\.05\] {
+/* --- BẮT ĐẦU PASTE --- */
+
+/* Lưới Light Mode: Màu xám đậm (gray) để test cho hiện đã */
+.grid-light-test {
   background-size: 40px 40px;
-  background-image: linear-gradient(to right, rgb(0 0 0 / 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(0 0 0 / 0.05) 1px, transparent 1px);
+  background-image: 
+    linear-gradient(to right, grey 1px, transparent 1px),
+    linear-gradient(to bottom, grey 1px, transparent 1px);
+  opacity: 0.2; /* Độ mờ 20% */
 }
 
-.dark .bg-grid-white\/\[0\.05\] {
+/* Lưới Dark Mode: Màu trắng */
+.dark .grid-dark-test {
   background-size: 40px 40px;
-  background-image: linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  background-image: 
+    linear-gradient(to right, white 1px, transparent 1px),
+    linear-gradient(to bottom, white 1px, transparent 1px);
+  opacity: 0.1;
 }
+
+/* --- KẾT THÚC PASTE --- */
