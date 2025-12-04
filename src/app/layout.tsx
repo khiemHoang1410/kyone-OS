@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google"; 
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { FloatingDock } from "@/components/layout/FloatingDock"; // Đảm bảo đường dẫn đúng
+import { ThemeProvider } from "@/features/theme/theme-provider";
+import { ModeToggle } from "@/components/ui/ModeToggle";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,13 +24,22 @@ export default function RootLayout({
          3. selection:bg-cyan-500/30: Bôi đen văn bản có màu đẹp (bonus).
       */}
       <body className={`${inter.className} antialiased overflow-x-hidden selection:bg-cyan-500/30`}>
-        
+
         {/* Main để w-full để thằng con page.tsx được bung lụa thoải mái */}
-        <main className="min-h-screen w-full relative">
-          {children}
-          <FloatingDock />
-        </main>
-        
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <main className="...">
+            {children}
+
+            <ModeToggle />
+            <FloatingDock />
+          </main>
+        </ThemeProvider>
+
       </body>
     </html>
   );
