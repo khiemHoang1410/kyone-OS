@@ -88,6 +88,28 @@
   
   /* Màu Neon chủ đạo (Ví dụ màu Cyan: 6 182 212) */
   --neon-glow: 6 182 212;
+
+/* --- 1. CHẾ ĐỘ SÁNG (LIGHT MODE) --- */
+  
+  /* Màu chủ đạo (Brand Color) - Đang để màu Tím/Xanh */
+  --brand-primary: 99 102 241;   /* Indigo-500 */
+  
+  /* Màu Neon phát sáng (Cái ngài thích nhất) - Đang để màu Cyan */
+  --neon-accent: 6 182 212;      /* Cyan-500 */
+  
+  /* Nền web & Chữ */
+  --bg-web: 255 255 255;         /* Trắng tinh */
+  --text-main: 24 24 27;         /* Đen xám (Zinc-900) */
+  --text-sub: 113 113 122;       /* Xám nhạt (Zinc-500) */
+
+  /* Màu lưới (Grid Pattern) - Đen mờ */
+  --grid-color: 0 0 0; 
+  --grid-opacity: 0.08;          /* Độ đậm của lưới (0.05 - 0.1) */
+
+  /* Màu Dock & Card (Kính mờ) */
+  --glass-bg: 255 255 255;       
+  --glass-border: 228 228 231;   /* Zinc-200 */
+
 }
 
 .dark {
@@ -166,4 +188,34 @@
   opacity: 0.1;
 }
 
-/* --- KẾT THÚC PASTE --- */
+
+/* --- ANIMATION CUỘN VÔ TẬN (Infinite Scroll) --- */
+@keyframes scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% - 1rem)); } /* -50% vì mình nhân đôi danh sách */
+}
+
+.animate-scroll {
+  animation: scroll 40s linear infinite; /* 40s là tốc độ (càng nhỏ càng nhanh) */
+}
+
+/* Đảo chiều (chạy ngược lại) */
+.animate-scroll-reverse {
+  animation: scroll 40s linear infinite reverse;
+}
+
+/* Hover vào thì dừng lại để xem cho rõ */
+.hover\:pause:hover .animate-scroll,
+.hover\:pause:hover .animate-scroll-reverse {
+  animation-play-state: paused;
+}
+
+/* Thêm vào global.css nếu chưa có */
+@keyframes shine {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+.animate-shine {
+  animation: shine 0.75s;
+}

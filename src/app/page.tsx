@@ -38,7 +38,7 @@ export default function Home() {
     
     /* 2. LỚP LƯỚI (Gọi đúng tên vừa tạo) */
     grid-light-test dark:grid-dark-test">
-        <div className="absolute inset-0 flex items-center justify-center dark:bg-black bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+        <div className="absolute inset-0 flex items-center justify-center dark:bg-black bg-white mask-[radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
       </div>
 
       {/* --- NỘI DUNG CHÍNH (Nằm đè lên trên background) --- */}
@@ -51,7 +51,7 @@ export default function Home() {
 
         {/* Header Title */}
         <motion.div variants={itemVariants} className="flex items-center gap-2">
-          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-neutral-900 to-neutral-500 dark:from-neutral-100 dark:to-neutral-500">
+          <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-linear-to-r from-neutral-900 to-neutral-500 dark:from-neutral-100 dark:to-neutral-500">
             Hello, It's Zehel!
           </h1>
           <span className="text-3xl animate-bounce">👋</span>
@@ -59,11 +59,11 @@ export default function Home() {
 
         {/* Bento Grid */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <BentoCard className="md:col-span-2 bg-gradient-to-br from-violet-500/10 to-purple-500/10 border-violet-500/20">
+          <BentoCard className="md:col-span-2 bg-linear-to-br from-violet-500/10 to-purple-500/10 border-violet-500/20">
             <ProfileHeader />
           </BentoCard>
 
-          <BentoCard className="md:col-span-1 bg-gradient-to-br from-pink-500/10 to-rose-500/10 border-pink-500/20">
+          <BentoCard className="md:col-span-1 bg-linear-to-br from-pink-500/10 to-rose-500/10 border-pink-500/20">
             <Socials />
           </BentoCard>
         </section>

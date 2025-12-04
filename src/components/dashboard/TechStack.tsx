@@ -1,55 +1,193 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Code2, Database, Layout, Server } from "lucide-react"; // Icon tượng trưng
+"use client";
 
-// 1. DATA: Khai báo dữ liệu ở một chỗ riêng (sau này lấy từ API cũng dễ)
-const skills = [
-  {
-    category: "Frontend",
-    icon: Layout,
-    items: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion"],
+import { cn } from "@/lib/utils";
+import React, { CSSProperties } from "react";
+
+// Định nghĩa kiểu dữ liệu cho xịn
+interface TechItem {
+  name: string;
+  icon: string;
+  color: string; // Thêm cái này để định màu chủ đạo cho từng tech
+  className?: string;
+}
+
+// Dữ liệu Logo Hàng Real + Màu thương hiệu (Brand Color)
+const technologies: TechItem[] = [
+  { 
+    name: "React", 
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+    color: "#61DAFB" // Màu xanh React
   },
-  {
-    category: "Backend",
-    icon: Server,
-    items: ["Node.js", "Express", "PostgreSQL", "Prisma ORM"],
+  { 
+    name: "Next.js", 
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
+    className: "dark:invert",
+    color: "#ffffff" // Màu trắng (cho nổi trên nền tối)
   },
-  {
-    category: "Tools & Others",
-    icon: Code2,
-    items: ["Git", "Docker", "Linux", "VS Code", "Figma"],
+  { 
+    name: "TypeScript", 
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+    color: "#3178C6" 
+  },
+  { 
+    name: "Tailwind", 
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
+    color: "#06B6D4"
+  },
+  { 
+    name: "Node.js", 
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
+    color: "#339933"
+  },
+  { 
+    name: "PostgreSQL", 
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
+    color: "#4169E1"
+  },
+  { 
+    name: "Docker", 
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
+    color: "#2496ED"
+  },
+  { 
+    name: "Git", 
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
+    color: "#F05032"
+  },
+  { 
+    name: "Figma", 
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg",
+    color: "#F24E1E"
+  },
+  { 
+    name: "Linux", 
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg",
+    color: "#FCC624"
+  },
+  { 
+    name: "Python", 
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+    color: "#3776AB"
+  },
+  { 
+    name: "VS Code", 
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg",
+    color: "#007ACC"
   },
 ];
 
+const row1 = technologies.slice(0, technologies.length / 2);
+const row2 = technologies.slice(technologies.length / 2);
+
 export function TechStack() {
   return (
-    // Grid System: Chia cột (Mobile 1 cột, PC 3 cột)
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6"> 
+    <div className="relative flex flex-col gap-8 py-10 overflow-hidden">
       
-      {/* 2. LOOP: Lặp qua từng nhóm skill để render ra Card */}
-      {skills.map((skill, index) => (
-        <Card key={index} className="bg-zinc-900 border-zinc-800 flex flex-col">
-          <CardHeader className="flex flex-row items-center gap-3 pb-2">
-            <div className="p-2 bg-zinc-800 rounded-lg">
-              <skill.icon size={20} className="text-blue-400" />
-            </div>
-            <CardTitle className="text-lg font-medium text-white">
-              {skill.category}
-            </CardTitle>
-          </CardHeader>
-          
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
-              {/* Lặp tiếp qua các items nhỏ bên trong */}
-              {skill.items.map((item) => (
-                <Badge key={item} variant="secondary" className="bg-zinc-800 text-zinc-300 hover:bg-zinc-700">
-                  {item}
-                </Badge>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+      {/* Mask fade 2 bên trông mượt hơn */}
+      <div className="absolute inset-0 z-10 pointer-events-none [mask-image:linear-gradient(to_right,white_0%,transparent_10%,transparent_90%,white_100%)] bg-gradient-to-r from-background via-transparent to-background"></div>
+
+      {/* Hàng 1 - Tốc độ vừa phải */}
+      <InfiniteLoop direction="left" speed="normal">
+        {row1.map((tech, idx) => (
+          <TechPill key={idx} tech={tech} />
+        ))}
+      </InfiniteLoop>
+
+      {/* Hàng 2 - Chậm hơn chút cho nghệ */}
+      <InfiniteLoop direction="right" speed="slow">
+        {row2.map((tech, idx) => (
+          <TechPill key={idx} tech={tech} />
+        ))}
+      </InfiniteLoop>
+
+    </div>
+  );
+}
+
+// Logic cuộn giữ nguyên nhưng tối ưu css
+function InfiniteLoop({ 
+  children, 
+  direction = "left", 
+  speed = "fast" 
+}: { 
+  children: React.ReactNode; 
+  direction?: "left" | "right"; 
+  speed?: "fast" | "normal" | "slow";
+}) {
+  const speedClass = {
+    fast: "duration-[20s]",
+    normal: "duration-[40s]",
+    slow: "duration-[60s]",
+  };
+
+  return (
+    <div className="flex overflow-hidden w-full group select-none">
+      <div
+        className={cn(
+          "flex gap-4 pr-4 w-max flex-nowrap",
+          direction === "left" ? "animate-scroll" : "animate-scroll-reverse",
+          "group-hover:[animation-play-state:paused]", // Dừng khi hover
+          // Thay vì hardcode giây trong CSS, ta dùng class utility nếu config tailwind, 
+          // nhưng ở đây tui giữ logic animation css thuần bên dưới cho ông dễ hiểu
+          speed === "fast" && "[animation-duration:20s]",
+          speed === "normal" && "[animation-duration:40s]",
+          speed === "slow" && "[animation-duration:60s]"
+        )}
+      >
+        {children}
+        {children}
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function TechPill({ tech }: { tech: TechItem }) {
+  return (
+    <div
+      style={{ "--glow-color": tech.color } as React.CSSProperties}
+      className={cn(
+        "shrink-0 whitespace-nowrap",
+        "group/pill relative flex items-center gap-3 px-6 py-3 rounded-2xl border cursor-pointer transition-all duration-500",
+        
+        // --- KHU VỰC FIX MÀU NỀN ---
+        
+        // 1. Light Mode (Nền sáng): 
+        // - Dùng bg-zinc-50 (xám khói cực nhẹ) để tách biệt với nền web trắng tinh.
+        // - Thêm shadow-sm để tạo độ nổi nhẹ (depth).
+        // - Viền xám nhẹ border-zinc-200.
+        "bg-zinc-50 border-zinc-200 shadow-sm",
+        
+        // 2. Dark Mode (Nền tối):
+        // - Giữ style kính mờ cũ vì nó hợp với nền tối.
+        "dark:bg-zinc-900/50 dark:border-zinc-800/50",
+        
+        // --- HIỆU ỨNG HOVER GIỮ NGUYÊN ---
+        "hover:border-[var(--glow-color)]",
+        "hover:shadow-[0_0_20px_-5px_var(--glow-color)]",
+        "hover:-translate-y-1 hover:scale-105",
+        
+        // Hover vào thì nền sáng lên theo màu brand một chút xíu
+        "hover:bg-[var(--glow-color)]/5" 
+      )}
+    >
+      <img 
+        src={tech.icon} 
+        alt={tech.name} 
+        className={cn(
+          "w-8 h-8 object-contain transition-transform duration-300 group-hover/pill:scale-110",
+          tech.className
+        )} 
+      />
+      
+      <span className={cn(
+        "text-sm font-bold tracking-wide transition-colors duration-300",
+        // Chữ màu đậm hơn tí cho dễ đọc trên nền sáng
+        "text-zinc-700 dark:text-zinc-400", 
+        "group-hover/pill:text-[var(--glow-color)]" 
+      )}>
+        {tech.name}
+      </span>
     </div>
   );
 }
