@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 // Import dữ liệu
-import { projects } from "@/src/data/projects"; 
+import { projects } from "@/data/projects"; 
 
 function ProjectCard({ project, index }: { project: any, index: number }) {
   return (

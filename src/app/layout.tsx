@@ -4,6 +4,7 @@ import "./globals.css";
 import { FloatingDock } from "@/components/layout/FloatingDock"; // Đảm bảo đường dẫn đúng
 import { ThemeProvider } from "@/features/theme/theme-provider";
 import { ModeToggle } from "@/components/ui/ModeToggle";
+import { CommandMenu } from "@/components/layout/CommandMenu";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,7 +35,7 @@ export default function RootLayout({
         >
           <main className="...">
             {children}
-
+            <CommandMenu />
             <ModeToggle />
             <FloatingDock />
           </main>

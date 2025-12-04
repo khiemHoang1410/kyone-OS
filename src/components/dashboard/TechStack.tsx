@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import React, { CSSProperties } from "react";
-import { technologies } from "@/src/data/tech-stack";
+import { technologies } from "@/data/tech-stack";
 // Định nghĩa kiểu dữ liệu cho xịn
 interface TechItem {
   name: string;

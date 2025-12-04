@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { dockItems } from "@/src/data/navigation";
+import { dockItems } from "@/data/navigation";
 // 1. Import dữ liệu từ file mới tạo
 
 export function FloatingDock() {
