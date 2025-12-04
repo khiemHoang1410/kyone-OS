@@ -8,17 +8,10 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import Link from "next/link";
-import { Home, User, Code, Layers, Mail } from "lucide-react";
 import { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-
-const navItems = [
-  { name: "Home", icon: Home, href: "/" },
-  { name: "About", icon: User, href: "/about" },
-  { name: "Projects", icon: Code, href: "/projects" },
-  { name: "Stack", icon: Layers, href: "/stack" },
-  { name: "Contact", icon: Mail, href: "/contact" },
-];
+import { dockItems } from "@/src/data/navigation";
+// 1. Import dữ liệu từ file mới tạo
 
 export function FloatingDock() {
   let mouseX = useMotionValue(Infinity);
@@ -32,19 +25,16 @@ export function FloatingDock() {
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
         className={cn(
-          // --- THAY ĐỔI 1: Tăng kích thước khung ---
-          // h-16 -> h-20 (cao hơn)
-          // gap-4 -> gap-5 (thoáng hơn)
-          // pb-3 -> pb-4 (đẩy icon lên xíu cho cân)
           "flex h-20 items-end gap-5 rounded-2xl px-5 pb-4 border backdrop-blur-xl",
-          
           "bg-zinc-900/90 border-zinc-800",
           "dark:bg-white/90 dark:border-zinc-200",
           "dark:shadow-[0_10px_30px_-10px_rgb(var(--neon-glow)/0.6)]"
         )}
       >
-        {navItems.map((item) => (
-          <DockItem key={item.name} mouseX={mouseX} item={item} />
+        {/* 2. Dùng dockItems thay vì navItems */}
+        {dockItems.map((item) => (
+          // Lưu ý: Dùng item.title làm key
+          <DockItem key={item.title} mouseX={mouseX} item={item} />
         ))}
       </motion.div>
     </div>
@@ -59,10 +49,6 @@ function DockItem({ mouseX, item }: { mouseX: any; item: any }) {
     return val - bounds.x - bounds.width / 2;
   });
 
-  // --- THAY ĐỔI 2: Tăng kích thước Icon ---
-  // [40, 80, 40] -> [50, 100, 50]
-  // 50: Kích thước bình thường (to hơn 40 cũ)
-  // 100: Kích thước khi hover (to hơn 80 cũ)
   const widthTransform = useTransform(distance, [-150, 0, 150], [50, 100, 50]);
 
   const width = useSpring(widthTransform, {
@@ -94,11 +80,12 @@ function DockItem({ mouseX, item }: { mouseX: any; item: any }) {
               animate={{ opacity: 1, y: -50, x: "-50%" }}
               exit={{ opacity: 0, y: 2 }}
               className={cn(
-                  "absolute left-1/2 -top-2 w-max px-3 py-1.5 rounded-md text-sm pointer-events-none font-bold", // Chỉnh lại padding tooltip xíu cho đẹp
+                  "absolute left-1/2 -top-2 w-max px-3 py-1.5 rounded-md text-sm pointer-events-none font-bold",
                   "bg-zinc-900/80 text-white dark:bg-white dark:text-black"
               )}
             >
-              {item.name}
+              {/* 3. Sửa item.name thành item.title ở đây nữa */}
+              {item.title}
             </motion.div>
           )}
         </AnimatePresence>

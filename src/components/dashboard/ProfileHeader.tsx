@@ -3,66 +3,97 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Terminal, ArrowRight, Download, Cpu, Coffee, Bug } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useState, useEffect } from "react";
+
+// Hook gõ chữ đơn giản
+function useTypewriter(text: string, speed: number = 100) {
+  const [displayedText, setDisplayedText] = useState("");
+  useEffect(() => {
+    let i = 0;
+    const timer = setInterval(() => {
+      if (i < text.length) {
+        setDisplayedText((prev) => prev + text.charAt(i));
+        i++;
+      } else {
+        clearInterval(timer);
+      }
+    }, speed);
+    return () => clearInterval(timer);
+  }, [text, speed]);
+  return displayedText;
+}
 
 export function ProfileHeader() {
+  const name = useTypewriter("Zehel", 150); // Tốc độ gõ 150ms
+
+  // Logic 3D Tilt
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const mouseX = useSpring(x, { stiffness: 500, damping: 100 });
+  const mouseY = useSpring(y, { stiffness: 500, damping: 100 });
+
+  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top, width, height } = currentTarget.getBoundingClientRect();
+    x.set(clientX - left - width / 2);
+    y.set(clientY - top - height / 2);
+  }
+
+  const rotateX = useTransform(mouseY, [-300, 300], [10, -10]); // Đảo ngược trục để nghiêng đúng
+  const rotateY = useTransform(mouseX, [-300, 300], [-10, 10]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="relative group"
+      style={{ perspective: 1000 }} // Quan trọng cho hiệu ứng 3D
+      className="relative group h-full"
     >
-      {/* Hiệu ứng Glow (Hào quang) phía sau khi hover */}
+      {/* Hiệu ứng Glow phía sau */}
       <div className="absolute -inset-0.5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-3xl blur opacity-20 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
       
-      {/* --- CÁI CỬA SỔ OS (CARD) --- */}
-      <Card className={cn(
-        "relative overflow-hidden rounded-3xl border",
-        // Glassmorphism xịn (Light/Dark mode)
-        "bg-white/40 dark:bg-zinc-900/40 backdrop-blur-md", 
-        "border-white/20 dark:border-white/10",
-        "shadow-xl"
-      )}>
-        
-        {/* --- WINDOW CONTROLS (3 nút Mac OS) --- */}
+      <motion.div
+        style={{ rotateX, rotateY }} // Áp dụng xoay 3D
+        onMouseMove={handleMouseMove}
+        onMouseLeave={() => { x.set(0); y.set(0); }}
+        className={cn(
+          "relative h-full overflow-hidden rounded-3xl border transition-colors",
+          "bg-white/40 dark:bg-zinc-900/40 backdrop-blur-md", 
+          "border-white/20 dark:border-white/10",
+          "shadow-xl"
+        )}
+      >
+        {/* WINDOW CONTROLS */}
         <div className="absolute top-4 left-4 flex gap-2 z-20">
           <div className="w-3 h-3 rounded-full bg-red-500/80 shadow-sm" />
           <div className="w-3 h-3 rounded-full bg-yellow-500/80 shadow-sm" />
           <div className="w-3 h-3 rounded-full bg-green-500/80 shadow-sm" />
         </div>
 
-        {/* --- DECORATION (Chữ System chìm) --- */}
         <div className="absolute top-3 right-5 text-[10px] font-mono font-bold tracking-widest text-zinc-400/50 uppercase select-none">
           System Info_v2.0
         </div>
 
-        <div className="p-8 pt-12 flex flex-col md:flex-row items-center gap-8 relative z-10">
+        <div className="p-8 pt-12 flex flex-col md:flex-row items-center gap-8 relative z-10 h-full">
           
-          {/* 1. AVATAR KHUNG TRANH (Interactive) */}
+          {/* AVATAR */}
           <motion.div 
             whileHover={{ scale: 1.05, rotate: 5 }}
-            className="relative"
+            className="relative shrink-0"
           >
-            {/* Vòng tròn xoay xoay */}
             <div className="absolute inset-0 rounded-full border-2 border-dashed border-zinc-400/30 animate-[spin_10s_linear_infinite]" />
-            
             <div className="w-32 h-32 rounded-full bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/30 overflow-hidden relative group/avatar">
-               {/* Icon Terminal */}
                <Terminal size={48} className="text-white relative z-10" />
-               
-               {/* Hiệu ứng quét sáng khi hover avatar */}
                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/avatar:translate-y-0 transition-transform duration-300 rounded-full" />
             </div>
-
-            {/* Status Online */}
             <div className="absolute bottom-1 right-1 w-8 h-8 bg-zinc-900 rounded-full flex items-center justify-center">
                <div className="w-5 h-5 bg-green-500 rounded-full border-2 border-zinc-900 animate-pulse" />
             </div>
           </motion.div>
 
-          {/* 2. INFO AREA */}
+          {/* INFO AREA */}
           <div className="flex-1 text-center md:text-left space-y-5">
             <div>
               <motion.div 
@@ -77,8 +108,10 @@ export function ProfileHeader() {
                 Available for Freelance
               </motion.div>
               
-              <h2 className="text-4xl font-black tracking-tight text-zinc-800 dark:text-zinc-100">
-                Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">Zehel</span> <span className="inline-block hover:animate-waving-hand cursor-default origin-[70%_70%]">👋</span>
+              <h2 className="text-4xl font-black tracking-tight text-zinc-800 dark:text-zinc-100 h-12">
+                Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">{name}</span>
+                <span className="animate-pulse text-indigo-500">|</span> 
+                <span className="inline-block ml-2 hover:animate-waving-hand cursor-default origin-[70%_70%]">👋</span>
               </h2>
               <p className="text-zinc-500 dark:text-zinc-400 mt-2 text-lg font-medium">
                 Full-stack Developer <span className="text-zinc-300 px-2">|</span> UI/UX Enthusiast
@@ -90,7 +123,6 @@ export function ProfileHeader() {
               Đây là khu vườn số (Digital Garden) nơi tôi trồng bug 🐛 và gặt hái kinh nghiệm.
             </p>
 
-            {/* --- STATS VUI NHỘN (Đúng chất OS) --- */}
             <div className="grid grid-cols-3 gap-2 md:gap-4 max-w-md mx-auto md:mx-0">
                <StatBadge icon={Cpu} label="Focus" value="ADHD 100%" color="text-red-500" />
                <StatBadge icon={Coffee} label="Fuel" value="Coffee" color="text-yellow-500" />
@@ -107,15 +139,14 @@ export function ProfileHeader() {
             </div>
           </div>
         </div>
-      </Card>
+      </motion.div>
     </motion.div>
   );
 }
 
-// Component con hiển thị chỉ số (Stats)
 function StatBadge({ icon: Icon, label, value, color }: { icon: any, label: string, value: string, color: string }) {
   return (
-    <div className="flex flex-col items-center md:items-start p-2 rounded-lg bg-zinc-100/50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700/50 backdrop-blur-sm">
+    <div className="flex flex-col items-center md:items-start p-2 rounded-lg bg-zinc-100/50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700/50 backdrop-blur-sm hover:bg-white/50 dark:hover:bg-zinc-700/50 transition-colors">
        <div className="flex items-center gap-1.5 text-xs text-zinc-500 uppercase font-bold tracking-wider mb-1">
           <Icon size={12} className={color} /> {label}
        </div>
